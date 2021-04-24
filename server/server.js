@@ -13,4 +13,11 @@ app.use("/api/auth", authRoutes);
 
 const PORT = process.env.PORT || 4500;
 
-app.listen(PORT, () => console.log(`listening on port: ${PORT}`));
+const server = app.listen(PORT, () =>
+  console.log(`listening on port: ${PORT}`)
+);
+
+process.on("unhandledRejection", (err, promise) => {
+  console.log(`Logged error: ${err}`);
+  server.close(() => process.exit(1));
+});
