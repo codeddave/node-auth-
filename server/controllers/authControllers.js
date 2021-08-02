@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const HttpError = require("../utils/httpError");
+const jwt = require("jsonwebtoken");
 
 const login = async (req, res, next) => {
   const { email, password } = req.body;
@@ -9,7 +10,7 @@ const login = async (req, res, next) => {
   try {
     const user = await User.findOne({ email }).select("+password");
     if (!user) {
-      next(new HttpError("Invalid credentials", 404));
+      next(new HttpError("User does not exist", 404));
     }
 
     const isMatch = await user.matchPasswords(password);
@@ -18,7 +19,12 @@ const login = async (req, res, next) => {
       next(new HttpError("Invalid Credentials", 404));
     }
 
-    res.status(200).json({ token: "ogibcibkb" });
+    const token = jwt.sign(
+      { email: user.email, id: user._id },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: "1hr" }
+    );
+    res.status(200).json({ token });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -32,7 +38,12 @@ const register = async (req, res, next) => {
       email,
       password,
     });
-    res.status(201).json(user);
+    const token = jwt.sign(
+      { email: user.email, id: user._id },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: "1hr" }
+    );
+    res.status(201).json({ token });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
