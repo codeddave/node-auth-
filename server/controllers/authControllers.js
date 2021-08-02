@@ -5,18 +5,18 @@ const jwt = require("jsonwebtoken");
 const login = async (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    next(new HttpError("Please provide email and password", 400));
+    return next(new HttpError("Please provide email and password", 400));
   }
   try {
     const user = await User.findOne({ email }).select("+password");
     if (!user) {
-      next(new HttpError("User does not exist", 404));
+      return next(new HttpError("User does not exist", 404));
     }
 
     const isMatch = await user.matchPasswords(password);
 
     if (!isMatch) {
-      next(new HttpError("Invalid Credentials", 404));
+      return next(new HttpError("Invalid Credentials", 404));
     }
 
     const token = jwt.sign(
@@ -24,9 +24,9 @@ const login = async (req, res, next) => {
       process.env.ACCESS_TOKEN_SECRET,
       { expiresIn: "1hr" }
     );
-    res.status(200).json({ token });
+    return res.status(200).json({ token });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
 
@@ -43,9 +43,9 @@ const register = async (req, res, next) => {
       process.env.ACCESS_TOKEN_SECRET,
       { expiresIn: "1hr" }
     );
-    res.status(201).json({ token });
+    return res.status(201).json({ token });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
 const forgotPassword = (req, res, next) => {};
