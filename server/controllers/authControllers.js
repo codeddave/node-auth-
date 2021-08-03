@@ -1,3 +1,4 @@
+const crypto = require("crypto");
 const User = require("../models/User");
 const HttpError = require("../utils/httpError");
 const jwt = require("jsonwebtoken");
@@ -48,7 +49,24 @@ const register = async (req, res, next) => {
     return res.status(500).json({ message: error.message });
   }
 };
-const forgotPassword = (req, res, next) => {};
+const forgotPassword = async (req, res, next) => {
+  const { email } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    return next(new HttpError("Email could not be sent", 404));
+  }
+
+  user.resetPasswordToken = crypto.randomBytes(20).toString("hex");
+  user.resetPasswordExpire = Date.now() + 10 * (60 * 1000);
+
+  try {
+    await user.save();
+  } catch (error) {
+    return next(new HttpError("Something went wrong,  please try again.", 500));
+  }
+};
 const resetPassword = (req, res, next) => {};
 
 exports.login = login;
