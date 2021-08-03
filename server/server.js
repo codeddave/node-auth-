@@ -12,6 +12,7 @@ app.use(cors());
   res.send("welcome");
   next();
 }); */
+
 app.use("/api/auth", authRoutes);
 app.use(errorHandler);
 

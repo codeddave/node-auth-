@@ -2,7 +2,7 @@ const crypto = require("crypto");
 const User = require("../models/User");
 const HttpError = require("../utils/httpError");
 const jwt = require("jsonwebtoken");
-
+const sendEmail = require("../utils/SendEmail");
 const login = async (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
@@ -57,14 +57,37 @@ const forgotPassword = async (req, res, next) => {
   if (!user) {
     return next(new HttpError("Email could not be sent", 404));
   }
-
-  user.resetPasswordToken = crypto.randomBytes(20).toString("hex");
+  const resetToken = crypto.randomBytes(20).toString("hex");
+  user.resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
   user.resetPasswordExpire = Date.now() + 10 * (60 * 1000);
 
   try {
     await user.save();
+
+    const resetUrl = `https://localhost:3000/resetpassword/${user.resetPasswordToken}`;
+    const message = `
+      <h1>You have requested a password reset</h1>
+      <p>Please visit this link to reset your password</p>
+      <a href=${resetUrl} clickTracking=off>${resetUrl}</a>`;
+
+    try {
+      await sendEmail({
+        to: user.email,
+        subject: "Password Reset Request",
+        text: message,
+      });
+      res.status(200).json({ message: "Email sent" });
+    } catch (error) {
+      user.resetPasswordToken = undefined;
+      user.resetPasswordExpire = undefined;
+      await user.save();
+      return next(new HttpError("Email could not be sent", 500));
+    }
   } catch (error) {
-    return next(new HttpError("Something went wrong,  please try again.", 500));
+    return next(new HttpError(error));
   }
 };
 const resetPassword = (req, res, next) => {};

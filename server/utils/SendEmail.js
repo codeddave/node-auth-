@@ -7,6 +7,9 @@ const sendEmail = (options) => {
       user: process.env.EMAIL_USERNAME,
       pass: process.env.EMAIL_PASSWORD,
     },
+    tls: {
+      rejectUnauthorized: false,
+    },
   });
 
   const mailOptions = {
@@ -18,7 +21,7 @@ const sendEmail = (options) => {
 
   transporter.sendMail(mailOptions, function (err, info) {
     if (err) {
-      console.log(error);
+      console.log(err);
     } else {
       console.log(info);
     }
