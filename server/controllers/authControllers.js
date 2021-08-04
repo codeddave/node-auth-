@@ -91,12 +91,27 @@ const forgotPassword = async (req, res, next) => {
   }
 };
 const resetPassword = async (req, res, next) => {
+  const { password } = req.body;
   const resetPasswordToken = crypto
     .createHash("sha256")
     .update(req.params.resetToken);
 
   try {
-    await User.findOne({ resetPasswordToken });
+    const user = await User.findOne({
+      resetPasswordToken,
+      resetPasswordExpire: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return next(new HttpError("Invalid Reset Token", 400));
+    }
+
+    user.password = password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+
+    await user.save();
+    res.status(201).json({ message: "Reset Password success" });
   } catch (error) {}
 };
 
