@@ -94,7 +94,8 @@ const resetPassword = async (req, res, next) => {
   const { password } = req.body;
   const resetPasswordToken = crypto
     .createHash("sha256")
-    .update(req.params.resetToken);
+    .update(req.params.token)
+    .digest("hex");
 
   try {
     const user = await User.findOne({
@@ -112,7 +113,9 @@ const resetPassword = async (req, res, next) => {
 
     await user.save();
     res.status(201).json({ message: "Reset Password success" });
-  } catch (error) {}
+  } catch (error) {
+    return next(new HttpError("Something went wrong", 500));
+  }
 };
 
 exports.login = login;
