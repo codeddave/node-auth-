@@ -67,7 +67,7 @@ const forgotPassword = async (req, res, next) => {
   try {
     await user.save();
 
-    const resetUrl = `https://localhost:3000/resetpassword/${user.resetPasswordToken}`;
+    const resetUrl = `https://localhost:3000/resetpassword/${resetToken}`;
     const message = `
       <h1>You have requested a password reset</h1>
       <p>Please visit this link to reset your password</p>
@@ -90,7 +90,15 @@ const forgotPassword = async (req, res, next) => {
     return next(new HttpError(error));
   }
 };
-const resetPassword = (req, res, next) => {};
+const resetPassword = async (req, res, next) => {
+  const resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(req.params.resetToken);
+
+  try {
+    await User.findOne({ resetPasswordToken });
+  } catch (error) {}
+};
 
 exports.login = login;
 exports.register = register;
