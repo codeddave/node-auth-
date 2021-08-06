@@ -114,7 +114,7 @@ const resetPassword = async (req, res, next) => {
     await user.save();
     res.status(201).json({ message: "Reset Password success" });
   } catch (error) {
-    return next(new HttpError("Something went wrong", 500));
+    return next(error);
   }
 };
 
