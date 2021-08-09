@@ -3,7 +3,7 @@ import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-import InputGroup from 'react-bootstrap/InputGroup'
+//import InputGroup from 'react-bootstrap/InputGroup'
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form'
 import * as Yup from "yup"   
@@ -11,12 +11,12 @@ import * as Yup from "yup"
         email: Yup.string()
         .trim()
         .min(2, "Too Short!")
-        .max(50, "Too Long!")
+        .max(50, "Email must not exceed 50 characters!")
         .email("Invalid email")
         .required("Required"),
       password: Yup.string()
-        .min(8, "Too Short!")
-        .max(50, "Too Long!")
+        .min(8, "Password must be at least 8 characters!")
+        .max(50, "Password must not exceed 50 characters!")
         .required("Required"),
     })
 const Register = () => {
@@ -30,16 +30,13 @@ const Register = () => {
         <Container> 
             <Row className="border justify-content-center align-items-center mt-5 h-100"> 
                  <Col xs={4} className="border"> 
-                    <Form noValidate onSubmit={handleSubmit(onSubmit)}>
+                    <Form noValidate  onSubmit={handleSubmit(onSubmit)}>
                         <Form.Group className="mb-3" controlId="formBasicEmail">
                             <Form.Label>Email address</Form.Label>
-                            <InputGroup hasValidation>
-                            
-                            <Form.Control type="email"   placeholder="Enter email" {...register("email", {required: true})}  isInvalid={!!errors.email} />
+                            <Form.Control type="email"   placeholder="Enter email" {...register("email")}  isInvalid={!!errors.email} />
                              <Form.Control.Feedback type="invalid">
                                 {errors.email ? errors.email.message: null}
                             </Form.Control.Feedback>
-                            </InputGroup>
                            
                             {/*    <Form.Text className="text-muted">
                                 We'll never share your email with anyone else.
@@ -48,7 +45,11 @@ const Register = () => {
 
                         <Form.Group className="mb-3" controlId="formBasicPassword">
                             <Form.Label>Password</Form.Label>
-                            <Form.Control type="password" placeholder="Password"  {...register("password", {required: true})}  isInvalid={!!errors.password} />
+                            <Form.Control type="password" placeholder="Password"  {...register("password")}  isInvalid={!!errors.password} />
+
+                            <Form.Control.Feedback type="invalid">
+                                {errors.password ? errors.password.message: null}
+                            </Form.Control.Feedback>
                         </Form.Group>
               {/*           <Form.Group className="mb-3" controlId="formBasicCheckbox">
                             <Form.Check type="checkbox" label="Check me out" />
