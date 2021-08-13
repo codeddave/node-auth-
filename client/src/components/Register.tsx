@@ -6,11 +6,15 @@ import Button from 'react-bootstrap/Button'
 //import InputGroup from 'react-bootstrap/InputGroup'
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form'
-import * as Yup from "yup"   
+import * as Yup from "yup" 
+/* import axios from "axios"  
+import { RegisterFormData } from './Yup/RegisterSchema' */
+
+
  const RegisterSchema = Yup.object().shape({
         email: Yup.string()
         .trim()
-        .min(2, "Too Short!")
+        .min(2)
         .max(50, "Email must not exceed 50 characters!")
         .email("Invalid email")
         .required("Required"),
@@ -18,12 +22,21 @@ import * as Yup from "yup"
         .min(8, "Password must be at least 8 characters!")
         .max(50, "Password must not exceed 50 characters!")
         .required("Required"),
-    })
+    })  
 const Register = () => {
     const {register, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(RegisterSchema)
     })
+/* const handleRegister = async(userData: RegisterFormData) => {
+    try {
+       const response =  await axios.post("/api/auth", {userData})
+       const token = response.data
+       
+    } catch (error) {
+        
+    }
 
+} */
     const onSubmit = (data: any) => console.log(data);
 
     return (
