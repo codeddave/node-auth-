@@ -33,6 +33,7 @@ const login = async (req, res, next) => {
 
 const register = async (req, res, next) => {
   const { username, email, password } = req.body;
+  console.log(username);
   try {
     const user = await User.create({
       username,
@@ -44,7 +45,7 @@ const register = async (req, res, next) => {
       process.env.ACCESS_TOKEN_SECRET,
       { expiresIn: "1hr" }
     );
-    return res.status(201).json({ token });
+    return res.status(201).json({ data: token });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

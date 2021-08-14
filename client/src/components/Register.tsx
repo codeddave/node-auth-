@@ -7,11 +7,12 @@ import Button from 'react-bootstrap/Button'
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form'
 import * as Yup from "yup" 
-/* import axios from "axios"  
-import { RegisterFormData } from './Yup/RegisterSchema' */
-
+import axios from "axios"  
+import { useHistory } from 'react-router-dom'
+import { toast } from 'react-toastify';
 
  const RegisterSchema = Yup.object().shape({
+     username: Yup.string().required(),
         email: Yup.string()
         .trim()
         .min(2)
@@ -23,27 +24,55 @@ import { RegisterFormData } from './Yup/RegisterSchema' */
         .max(50, "Password must not exceed 50 characters!")
         .required("Required"),
     })  
+type RegisterFormData = Yup.InferType<typeof RegisterSchema>
+
 const Register = () => {
     const {register, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(RegisterSchema)
-    })
-/* const handleRegister = async(userData: RegisterFormData) => {
+    })  
+    const history = useHistory()
+
+
+  /*   const config = {
+        header: {
+            "Content-Type": "application/json"
+        }
+    } */
+const handleRegister = async(userData: RegisterFormData): Promise<void> => {
     try {
-       const response =  await axios.post("/api/auth", {userData})
+       const response =  await axios.post("http://localhost:5000/api/auth/register", {...userData})
        const token = response.data
-       
+       localStorage.setItem("user", token )
+       toast.success("you're logged in")
+       history.push("/app")
+
     } catch (error) {
-        
+     toast.error("Something  went wrong")   
+     console.log(error)
     }
 
-} */
-    const onSubmit = (data: any) => console.log(data);
+}
+    const onSubmit = (data: RegisterFormData) => {
+        handleRegister(data)
+        console.log(data)
+    }
 
     return (
         <Container> 
-            <Row className="border justify-content-center align-items-center mt-5 h-100"> 
-                 <Col xs={4} className="border"> 
-                    <Form noValidate  onSubmit={handleSubmit(onSubmit)}>
+            <Row className="justify-content-center align-items-center mt-5 h-100"> 
+                 <Col xs={4} className="border mt-5"> 
+                    <Form noValidate  onSubmit={handleSubmit(onSubmit)} className="my-3 mx-">
+                    <Form.Group className="mb-3" controlId="formBasicUsername">
+                            <Form.Label>Username</Form.Label>
+                            <Form.Control type="text"   placeholder="Username" {...register("username")}  isInvalid={!!errors.username} />
+                             <Form.Control.Feedback type="invalid">
+                                {errors.username ? errors.username.message: null}
+                            </Form.Control.Feedback>
+                           
+                            {/*    <Form.Text className="text-muted">
+                                We'll never share your email with anyone else.
+                            </Form.Text> */}
+                        </Form.Group>
                         <Form.Group className="mb-3" controlId="formBasicEmail">
                             <Form.Label>Email address</Form.Label>
                             <Form.Control type="email"   placeholder="Enter email" {...register("email")}  isInvalid={!!errors.email} />

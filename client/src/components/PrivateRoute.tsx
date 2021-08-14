@@ -11,7 +11,7 @@ const PrivateRoute: FC <{component: FC, exact?: boolean, path:string | string[]}
 
         if(!user) {
             return (
-                <Redirect to = "/"/>
+                <Redirect to = "/register"/>
             )
         }
 
