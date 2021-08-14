@@ -1,11 +1,19 @@
 import  {FC} from 'react'
-import { Route, RouteComponentProps } from 'react-router-dom'
+import { Redirect, Route, RouteComponentProps } from 'react-router-dom'
 
 
 
-const PrivateRoute: FC <{component: FC}> = ({component: Component  , ...rest }) => {
+const PrivateRoute: FC <{component: FC, exact?: boolean, path:string | string[]}> = ({component: Component  , ...rest }) => {
+    const user = localStorage.getItem("user")
+
+
     const renderPrivateComponent: FC<RouteComponentProps> = (props)=> {
 
+        if(!user) {
+            return (
+                <Redirect to = "/"/>
+            )
+        }
 
         return (
             <Component {...props}/>
