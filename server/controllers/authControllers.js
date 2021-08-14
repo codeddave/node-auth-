@@ -33,8 +33,14 @@ const login = async (req, res, next) => {
 
 const register = async (req, res, next) => {
   const { username, email, password } = req.body;
-  console.log(username);
+
   try {
+    const userExist = await User.findOne({ email });
+    const usernameExist = await User.findOne({ username });
+    console.log(userExist);
+    console.log(usernameExist);
+    if (userExist || usernameExist)
+      return next(new HttpError("user exists", 401));
     const user = await User.create({
       username,
       email,
@@ -45,7 +51,7 @@ const register = async (req, res, next) => {
       process.env.ACCESS_TOKEN_SECRET,
       { expiresIn: "1hr" }
     );
-    return res.status(201).json({ data: token });
+    return res.status(201).json({ token });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
