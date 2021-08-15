@@ -6,6 +6,7 @@ import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import PublicRoute from "./components/PublicRoute";
 import Login from "./components/Login";
+import ForgotPassword from "./components/ForgotPassword";
 
 function App() {
   return (
@@ -15,6 +16,8 @@ function App() {
           <Switch> 
             <PublicRoute exact path = "/register" component = {Register}/>
             <PublicRoute exact path = "/login" component = {Login} />
+            <PublicRoute exact path = "/forgot-password" component = {ForgotPassword} />
+
             <PrivateRoute exact path="/app" component={Home}/>
           </Switch>
         </Router>

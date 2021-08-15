@@ -11,23 +11,19 @@ import axios from "axios"
 import { useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify';
 
- const LoginSchema = Yup.object().shape({
+ const ForgotPasswordSchema = Yup.object().shape({
         email: Yup.string()
         .trim()
         .min(2)
         .max(50, "Email must not exceed 50 characters!")
         .email("Invalid email")
         .required("Required"),
-      password: Yup.string()
-        .min(8, "Password must be at least 8 characters!")
-        .max(50, "Password must not exceed 50 characters!")
-        .required("Required"),
     })  
-type LoginFormData = Yup.InferType<typeof LoginSchema>
+type ForgotPasswordFormData = Yup.InferType<typeof ForgotPasswordSchema>
 
-const Login = () => {
+const ForgotPassword = () => {
     const {register, handleSubmit, formState: { errors } } = useForm({
-        resolver: yupResolver(LoginSchema)
+        resolver: yupResolver(ForgotPasswordSchema)
     })  
     const history = useHistory()
 
@@ -37,25 +33,22 @@ const Login = () => {
             "Content-Type": "application/json"
         }
     } */
-const handleLogin = async(userData: LoginFormData): Promise<void> => {
+const handleForgotPassword = async(userData: ForgotPasswordFormData): Promise<void> => {
     try {
-       const response =  await axios.post("http://localhost:5000/api/auth/login", {...userData})
-       const {token} = response.data
-       localStorage.setItem("user", token )
-       toast.success("you're logged in")
-       history.push("/app")
+       const response =  await axios.post("http://localhost:5000/api/auth/forgotPassword", {...userData})
+       const {message} = response.data
+       toast.success(/* "Reset Password request sent successfully" */ message)
+       history.push("/reset-password")
 
     } catch (error) {
-     //toast.error("Some")   
      toast.error(error.response.data.message)   
-
-     console.log(error.message)
+     console.log(error.response)
     }
 
 }
-    const onSubmit = (data: LoginFormData) => {
-        handleLogin(data)
-
+    const onSubmit = (data: ForgotPasswordFormData) => {
+        handleForgotPassword(data)
+        console.log(data)
     }
 
     return (
@@ -63,32 +56,16 @@ const handleLogin = async(userData: LoginFormData): Promise<void> => {
             <Row className="justify-content-center align-items-center mt-5 h-100"> 
                  <Col xs={4} className="border mt-5"> 
                     <Form noValidate  onSubmit={handleSubmit(onSubmit)} className="my-3 mx-2">
-                   
+                        <p className="small text-muted pt-3">Please enter the email associated with this account.</p>
                         <Form.Group className="mb-3" controlId="formBasicEmail">
                             <Form.Label>Email Address</Form.Label>
                             <Form.Control type="email"   placeholder="Enter email" {...register("email")}  isInvalid={!!errors.email} />
                              <Form.Control.Feedback type="invalid">
                                 {errors.email ? errors.email.message: null}
                             </Form.Control.Feedback>
-                           
-                            {/*    <Form.Text className="text-muted">
-                                We'll never share your email with anyone else.
-                            </Form.Text> */}
                         </Form.Group>
-
-                        <Form.Group className="mb-3" controlId="formBasicPassword">
-                            <Form.Label>Password</Form.Label>
-                            <Form.Control type="password" placeholder="Password"  {...register("password")}  isInvalid={!!errors.password} />
-
-                            <Form.Control.Feedback type="invalid">
-                                {errors.password ? errors.password.message: null}
-                            </Form.Control.Feedback>
-                        </Form.Group>
-              {/*           <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                            <Form.Check type="checkbox" label="Check me out" />
-                        </Form.Group> */}
                         <Button variant="primary" type="submit" className="mt-3">
-                            Log In 
+                            Submit
                         </Button>
                 </Form>
             </Col>
@@ -98,4 +75,4 @@ const handleLogin = async(userData: LoginFormData): Promise<void> => {
     )
 }
 
-export default Login
+export default ForgotPassword

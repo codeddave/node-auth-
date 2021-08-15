@@ -5,7 +5,6 @@ import { toast } from 'react-toastify';
 
 const Home = () => {
    const history =  useHistory()
-
     const handleLogout = ()=> {
         localStorage.removeItem("user")
         toast.success("Come back soon!")
@@ -18,9 +17,7 @@ const Home = () => {
                 <Button variant="primary" onClick ={handleLogout} className="mt-3 ">
                     Log Out
                 </Button>
-
             </div>
-            
         </div>
     )
 }
