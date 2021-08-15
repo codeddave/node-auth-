@@ -42,14 +42,14 @@ const ResetPassword = () => {
         }
     } */
 const handleRegister = async(userData: ResetPasswordFormData): Promise<void> => {
+    const {password} = userData
     try {
-       const response =  await axios.post(`http://localhost:5000/api/auth/resetPassword/${token}`, {...userData})
-console.log(response)
-       toast.success("Registration Successful")
-       history.push("/app")
+       const response =  await axios.put(`http://localhost:5000/api/auth/resetPassword/${token}`, {password})
+       toast.success(response.data.message)
+       history.push("/login")
 
     } catch (error) {
-     toast.error("Some")   
+     toast.error(error.response.data.message)   
      console.log(error.message)
     }
 }
