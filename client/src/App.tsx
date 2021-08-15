@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import PublicRoute from "./components/PublicRoute";
 import Login from "./components/Login";
 import ForgotPassword from "./components/ForgotPassword";
+import ResetPassword from "./components/ResetPassword";
 
 function App() {
   return (
@@ -17,6 +18,8 @@ function App() {
             <PublicRoute exact path = "/register" component = {Register}/>
             <PublicRoute exact path = "/login" component = {Login} />
             <PublicRoute exact path = "/forgot-password" component = {ForgotPassword} />
+            <PublicRoute exact path = "/reset-password/:token" component = {ResetPassword} />
+
 
             <PrivateRoute exact path="/app" component={Home}/>
           </Switch>
