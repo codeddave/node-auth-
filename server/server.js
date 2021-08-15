@@ -2,6 +2,8 @@ const express = require("express");
 require("dotenv").config();
 const cors = require("cors");
 const authRoutes = require("./routes/authRoutes");
+const privateRoutes = require("./routes/privateRoutes");
+
 const connectDB = require("./config/db");
 const errorHandler = require("./middleware/errorHandler");
 connectDB();
@@ -14,6 +16,8 @@ app.use(cors());
 }); */
 
 app.use("/api/auth", authRoutes);
+app.use("/api/private", privateRoutes);
+
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 4500;
