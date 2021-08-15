@@ -8,7 +8,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form'
 import * as Yup from "yup" 
 import axios from "axios"  
-import { useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify';
 
  const LoginSchema = Yup.object().shape({
@@ -90,6 +90,8 @@ const handleLogin = async(userData: LoginFormData): Promise<void> => {
                         <Button variant="primary" type="submit" className="mt-3">
                             Log In 
                         </Button>
+
+                        <p className="mt-2 text-muted small text-center">Don't have an account? <Link to="/register">Register</Link></p>
                 </Form>
             </Col>
             </Row>

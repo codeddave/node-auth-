@@ -8,7 +8,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form'
 import * as Yup from "yup" 
 import axios from "axios"  
-import { useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify';
 
  const RegisterSchema = Yup.object().shape({
@@ -99,6 +99,7 @@ const handleRegister = async(userData: RegisterFormData): Promise<void> => {
                         <Button variant="primary" type="submit" className="mt-3">
                             Register
                         </Button>
+                        <p className="mt-2 text-muted small text-center">Already have an account? <Link to="/login">Log In</Link></p>
                 </Form>
             </Col>
             </Row>
