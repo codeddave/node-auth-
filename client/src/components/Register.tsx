@@ -43,7 +43,7 @@ const handleRegister = async(userData: RegisterFormData): Promise<void> => {
        const response =  await axios.post("http://localhost:5000/api/auth/register", {...userData})
        const {token} = response.data
        localStorage.setItem("user", token )
-       toast.success("you're logged in")
+       toast.success("Registration Successful")
        history.push("/app")
 
     } catch (error) {
@@ -61,7 +61,7 @@ const handleRegister = async(userData: RegisterFormData): Promise<void> => {
         <Container> 
             <Row className="justify-content-center align-items-center mt-5 h-100"> 
                  <Col xs={4} className="border mt-5"> 
-                    <Form noValidate  onSubmit={handleSubmit(onSubmit)} className="my-3 mx-">
+                    <Form noValidate  onSubmit={handleSubmit(onSubmit)} className="my-3 mx-2">
                     <Form.Group className="mb-3" controlId="formBasicUsername">
                             <Form.Label>Username</Form.Label>
                             <Form.Control type="text"   placeholder="Username" {...register("username")}  isInvalid={!!errors.username} />
@@ -96,8 +96,8 @@ const handleRegister = async(userData: RegisterFormData): Promise<void> => {
               {/*           <Form.Group className="mb-3" controlId="formBasicCheckbox">
                             <Form.Check type="checkbox" label="Check me out" />
                         </Form.Group> */}
-                        <Button variant="primary" type="submit">
-                            Submit
+                        <Button variant="primary" type="submit" className="mt-3">
+                            Register
                         </Button>
                 </Form>
             </Col>

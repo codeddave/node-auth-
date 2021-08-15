@@ -60,7 +60,7 @@ const handleLogin = async(userData: LoginFormData): Promise<void> => {
         <Container> 
             <Row className="justify-content-center align-items-center mt-5 h-100"> 
                  <Col xs={4} className="border mt-5"> 
-                    <Form noValidate  onSubmit={handleSubmit(onSubmit)} className="my-3 mx-">
+                    <Form noValidate  onSubmit={handleSubmit(onSubmit)} className="my-3 mx-2">
                    
                         <Form.Group className="mb-3" controlId="formBasicEmail">
                             <Form.Label>Email address</Form.Label>
@@ -85,7 +85,7 @@ const handleLogin = async(userData: LoginFormData): Promise<void> => {
               {/*           <Form.Group className="mb-3" controlId="formBasicCheckbox">
                             <Form.Check type="checkbox" label="Check me out" />
                         </Form.Group> */}
-                        <Button variant="primary" type="submit">
+                        <Button variant="primary" type="submit" className="mt-3">
                             Submit
                         </Button>
                 </Form>
