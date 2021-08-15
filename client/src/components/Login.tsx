@@ -11,8 +11,7 @@ import axios from "axios"
 import { useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify';
 
- const RegisterSchema = Yup.object().shape({
-     username: Yup.string().required(),
+ const LoginSchema = Yup.object().shape({
         email: Yup.string()
         .trim()
         .min(2)
@@ -24,11 +23,11 @@ import { toast } from 'react-toastify';
         .max(50, "Password must not exceed 50 characters!")
         .required("Required"),
     })  
-type RegisterFormData = Yup.InferType<typeof RegisterSchema>
+type LoginFormData = Yup.InferType<typeof LoginSchema>
 
-const Register = () => {
+const Login = () => {
     const {register, handleSubmit, formState: { errors } } = useForm({
-        resolver: yupResolver(RegisterSchema)
+        resolver: yupResolver(LoginSchema)
     })  
     const history = useHistory()
 
@@ -38,9 +37,9 @@ const Register = () => {
             "Content-Type": "application/json"
         }
     } */
-const handleRegister = async(userData: RegisterFormData): Promise<void> => {
+const handleLogin = async(userData: LoginFormData): Promise<void> => {
     try {
-       const response =  await axios.post("http://localhost:5000/api/auth/register", {...userData})
+       const response =  await axios.post("http://localhost:5000/api/auth/login", {...userData})
        const {token} = response.data
        localStorage.setItem("user", token )
        toast.success("you're logged in")
@@ -52,8 +51,8 @@ const handleRegister = async(userData: RegisterFormData): Promise<void> => {
     }
 
 }
-    const onSubmit = (data: RegisterFormData) => {
-        handleRegister(data)
+    const onSubmit = (data: LoginFormData) => {
+        handleLogin(data)
         console.log(data)
     }
 
@@ -62,17 +61,7 @@ const handleRegister = async(userData: RegisterFormData): Promise<void> => {
             <Row className="justify-content-center align-items-center mt-5 h-100"> 
                  <Col xs={4} className="border mt-5"> 
                     <Form noValidate  onSubmit={handleSubmit(onSubmit)} className="my-3 mx-">
-                    <Form.Group className="mb-3" controlId="formBasicUsername">
-                            <Form.Label>Username</Form.Label>
-                            <Form.Control type="text"   placeholder="Username" {...register("username")}  isInvalid={!!errors.username} />
-                             <Form.Control.Feedback type="invalid">
-                                {errors.username ? errors.username.message: null}
-                            </Form.Control.Feedback>
-                           
-                            {/*    <Form.Text className="text-muted">
-                                We'll never share your email with anyone else.
-                            </Form.Text> */}
-                        </Form.Group>
+                   
                         <Form.Group className="mb-3" controlId="formBasicEmail">
                             <Form.Label>Email address</Form.Label>
                             <Form.Control type="email"   placeholder="Enter email" {...register("email")}  isInvalid={!!errors.email} />
@@ -107,4 +96,4 @@ const handleRegister = async(userData: RegisterFormData): Promise<void> => {
     )
 }
 
-export default Register
+export default Login
