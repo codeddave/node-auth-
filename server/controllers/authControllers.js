@@ -37,8 +37,7 @@ const register = async (req, res, next) => {
   try {
     const userExist = await User.findOne({ email });
     const usernameExist = await User.findOne({ username });
-    console.log(userExist);
-    console.log(usernameExist);
+
     if (userExist || usernameExist)
       return next(new HttpError("user exists", 401));
     const user = await User.create({
